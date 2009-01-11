@@ -1,0 +1,55 @@
+--- php-pecl-mdbtools-1.0.0/mdbtools-1.0.0/config.m4~	2007-11-27 16:13:18.000000000 +0100
++++ php-pecl-mdbtools-1.0.0/mdbtools-1.0.0/config.m4	2009-01-11 15:16:43.231780402 +0100
+@@ -26,24 +26,18 @@
+   LDFLAGS="$CFLAGS $GLIB_LIBS"
+ 
+ 
+-
+-  if test -r "$PHP_MDBTOOLS/include/mdbtools.h"; then
+-	PHP_MDBTOOLS_DIR="$PHP_MDBTOOLS"
+-  else
+-	AC_MSG_CHECKING(for mdbtools in default path)
+-	for i in /usr /usr/local; do
+-	  if test -r "$i/include/mdbtools.h"; then
+-		PHP_MDBTOOLS_DIR=$i
+-		AC_MSG_RESULT(found in $i)
+-		break
+-	  fi
+-	done
+-	if test "x" = "x$PHP_MDBTOOLS_DIR"; then
+-	  AC_MSG_ERROR(not found)
++  AC_MSG_CHECKING(for mdbtools header files)
++  for dir in $PHP_MDBTOOLS /usr/include /usr/include/mdb /usr/local/include /usr/local/include/mdb; do
++	if test -r "$dir/mdbtools.h"; then
++		AC_MSG_RESULT(found in $dir)
++		PHP_MDBTOOLS_DIR=$dir
+ 	fi
+-  fi
++  done
++  if test "x" = "x$PHP_MDBTOOLS_DIR"; then
++  	AC_MSG_ERROR(not found)
++  fi 
+ 
+-  PHP_ADD_INCLUDE($PHP_MDBTOOLS_DIR/include)
++  PHP_ADD_INCLUDE($PHP_MDBTOOLS_DIR)
+ 
+   export OLD_CPPFLAGS="$CPPFLAGS"
+   export CPPFLAGS="$CPPFLAGS $INCLUDES -DHAVE_MDBTOOLS"
+@@ -76,7 +76,7 @@
+   PHP_NEW_EXTENSION(mdbtools, mdbtools.c , $ext_shared)
+   AC_MSG_CHECKING([whether mdb_open() takes one or two parameters])
+   OLD_CFLAGS=$CFLAGS
+-  CFLAGS="$CFLAGS -I$PHP_MDBTOOLS_DIR/include"
++  CFLAGS="$CFLAGS -I$PHP_MDBTOOLS_DIR"
+   AC_TRY_COMPILE([#include <mdbtools.h>], [mdb_open("foo", MDB_NOFLAGS);], RESULT="two", RESULT="one")
+   if test "$RESULT" = "two"
+   then
+@@ -87,7 +87,7 @@
+ 
+   AC_MSG_CHECKING([whether mdb_bind_column() takes three or four parameters])
+   OLD_CFLAGS=$CFLAGS
+-  CFLAGS="$CFLAGS -I$PHP_MDBTOOLS_DIR/include"
++  CFLAGS="$CFLAGS -I$PHP_MDBTOOLS_DIR"
+   AC_TRY_COMPILE([#include <mdbtools.h>], [mdb_bind_column(NULL, 1, NULL, NULL);], RESULT="four", RESULT="three")
+   if test "$RESULT" = "four"
+   then
