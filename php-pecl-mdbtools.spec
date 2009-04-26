@@ -1,7 +1,7 @@
 %define		_modname	mdbtools
 %define		_status		stable
-Summary:	MDB data file access library
-Summary(pl.UTF-8):	biblioteka dostępu do plików MDB
+Summary:	%{_modname} - MDB data file access library
+Summary(pl.UTF-8):	%{_modname} - biblioteka dostępu do plików MDB
 Name:		php-pecl-%{_modname}
 Version:	1.0.0
 Release:	2
