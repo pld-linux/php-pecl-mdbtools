@@ -5,7 +5,7 @@ Summary:	%{modname} - MDB data file access library
 Summary(pl.UTF-8):	%{modname} - biblioteka dostępu do plików MDB
 Name:		%{php_name}-pecl-%{modname}
 Version:	1.0.0
-Release:	9
+Release:	10
 License:	LGPL
 Group:		Development/Languages/PHP
 Source0:	http://pecl.php.net/get/%{modname}-%{version}.tgz
