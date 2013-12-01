@@ -5,12 +5,13 @@ Summary:	%{modname} - MDB data file access library
 Summary(pl.UTF-8):	%{modname} - biblioteka dostępu do plików MDB
 Name:		%{php_name}-pecl-%{modname}
 Version:	1.0.0
-Release:	10
+Release:	11
 License:	LGPL
 Group:		Development/Languages/PHP
 Source0:	http://pecl.php.net/get/%{modname}-%{version}.tgz
 # Source0-md5:	758f844257c50dbd07c2b9a67a83954b
 Patch0:		php-pecl-%{modname}-paths.patch
+Patch1:		mdb-0.7.patch
 URL:		http://pecl.php.net/package/mdbtools/
 BuildRequires:	%{php_name}-devel >= 3:5.0.0
 BuildRequires:	mdbtools-devel
@@ -37,6 +38,7 @@ To rozszerzenie ma w PECL status: %{status}.
 %setup -qc
 mv %{modname}-%{version}/* .
 %patch0 -p2
+%patch1 -p1
 
 %build
 phpize
