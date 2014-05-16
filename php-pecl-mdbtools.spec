@@ -5,7 +5,7 @@ Summary:	%{modname} - MDB data file access library
 Summary(pl.UTF-8):	%{modname} - biblioteka dostępu do plików MDB
 Name:		%{php_name}-pecl-%{modname}
 Version:	1.0.0
-Release:	11
+Release:	12
 License:	LGPL
 Group:		Development/Languages/PHP
 Source0:	http://pecl.php.net/get/%{modname}-%{version}.tgz
@@ -13,12 +13,12 @@ Source0:	http://pecl.php.net/get/%{modname}-%{version}.tgz
 Patch0:		php-pecl-%{modname}-paths.patch
 Patch1:		mdb-0.7.patch
 URL:		http://pecl.php.net/package/mdbtools/
-BuildRequires:	%{php_name}-devel >= 3:5.0.0
+BuildRequires:	%{php_name}-devel >= 3:5.0.4
 BuildRequires:	mdbtools-devel
 BuildRequires:	rpmbuild(macros) >= 1.650
 %{?requires_php_extension}
-Requires:	php(core) >= 5.0.4
 Provides:	php(%{modname}) = %{version}
+Obsoletes:	php-pecl-mdbtools < 1.0.0-11
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
