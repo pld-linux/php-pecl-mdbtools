@@ -1,0 +1,93 @@
+--- php-pecl-mdbtools-1.0.0/config.m4.orig	2023-02-26 09:02:15.665798499 +0100
++++ php-pecl-mdbtools-1.0.0/config.m4	2023-02-26 09:06:21.847798150 +0100
+@@ -45,7 +45,7 @@ if test "$PHP_MDBTOOLS" != "no"; then
+   PHP_SUBST(MDBTOOLS_SHARED_LIBADD)
+ 
+ 
+-  PHP_CHECK_LIBRARY(mdb, mdb_init,
++  PHP_CHECK_LIBRARY(mdb, mdb_open,
+   [
+ 	PHP_ADD_LIBRARY_WITH_PATH(mdb, $PHP_MDBTOOLS_DIR/lib, MDBTOOLS_SHARED_LIBADD)
+   ],[
+--- php-pecl-mdbtools-1.0.0/mdbtools.c.orig	2023-02-26 09:08:23.800470809 +0100
++++ php-pecl-mdbtools-1.0.0/mdbtools.c	2023-02-26 09:38:31.430678036 +0100
+@@ -76,7 +76,6 @@ function_entry mdbtools_functions[] = {
+ 	PHP_FE(mdb_num_rows        , mdb_num_rows_arg_info)
+ 	PHP_FE(mdb_table_fields    , mdb_table_fields_arg_info)
+ 	PHP_FE(mdb_table_indexes   , mdb_table_indexes_arg_info)
+-	PHP_FE(mdb_type_name       , mdb_type_name_arg_info)
+ 	{ NULL, NULL, NULL }
+ };
+ /* }}} */
+@@ -125,9 +124,6 @@ PHP_MINIT_FUNCTION(mdbtools)
+ 						   NULL, "MdbDatabase", module_number);
+ 	le_MdbTable = zend_register_list_destructors_ex(MdbTable_dtor, 
+ 						   NULL, "MdbTable", module_number);
+-	do {
+-		mdb_init();
+-	} while (0);
+ 
+ 	return SUCCESS;
+ }
+@@ -137,10 +133,6 @@ PHP_MINIT_FUNCTION(mdbtools)
+ /* {{{ PHP_MSHUTDOWN_FUNCTION */
+ PHP_MSHUTDOWN_FUNCTION(mdbtools)
+ {
+-	do {
+-		mdb_exit();
+-	} while (0);
+-
+ 	return SUCCESS;
+ }
+ /* }}} */
+@@ -655,31 +647,6 @@ PHP_FUNCTION(mdb_table_indexes)
+ /* }}} mdb_table_indexes */
+ 
+ 
+-/* {{{ proto string mdb_type_name(resource MdbDatabase db, int typecode)
+-  Look up the name for a field type */
+-PHP_FUNCTION(mdb_type_name)
+-{
+-	zval * db_res = NULL;
+-	int db_resid = -1;
+-	MdbHandle * db;
+-
+-	long typecode = 0;
+-
+-
+-
+-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "rl", &db_res, &typecode) == FAILURE) {
+-		return;
+-	}
+-	ZEND_FETCH_RESOURCE(db, MdbHandle *, &db_res, db_resid, "MdbDatabase", le_MdbDatabase);
+-
+-
+-
+-	do {
+-		RETURN_STRING(mdb_get_coltype_string (db->default_backend, typecode), 1);
+-	} while (0);
+-}
+-/* }}} mdb_type_name */
+-
+ #endif /* HAVE_MDBTOOLS */
+ 
+ 
+--- php-pecl-mdbtools-1.0.0/php_mdbtools.h.orig	2007-11-27 16:13:18.000000000 +0100
++++ php-pecl-mdbtools-1.0.0/php_mdbtools.h	2023-02-26 09:38:42.637283991 +0100
+@@ -203,16 +203,6 @@ ZEND_END_ARG_INFO()
+ #define mdb_table_indexes_arg_info NULL
+ #endif
+ 
+-PHP_FUNCTION(mdb_type_name);
+-#if (PHP_MAJOR_VERSION >= 5)
+-ZEND_BEGIN_ARG_INFO_EX(mdb_type_name_arg_info, ZEND_SEND_BY_VAL, ZEND_RETURN_VALUE, 2)
+-  ZEND_ARG_INFO(0, db)
+-  ZEND_ARG_INFO(0, typecode)
+-ZEND_END_ARG_INFO()
+-#else /* PHP 4.x */
+-#define mdb_type_name_arg_info NULL
+-#endif
+-
+ #ifdef  __cplusplus
+ } // extern "C" 
+ #endif
